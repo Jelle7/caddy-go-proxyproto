@@ -1,6 +1,9 @@
 package caddygoproxyproto
 
-import "github.com/caddyserver/caddy/v2"
+import (
+	"github.com/caddyserver/caddy/v2"
+	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
+)
 
 func init() {
 	caddy.RegisterModule(Wrapper{})

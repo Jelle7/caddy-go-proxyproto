@@ -1,4 +1,4 @@
-module github.com/rocketreferrals/caddy-go-proxyproto
+module github.com/jelle7/caddy-go-proxyproto
 
 go 1.16
 

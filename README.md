@@ -11,6 +11,24 @@ The official proxy protocol package referenced on the caddy documentation does n
 handle AWS NLB requests well. This is the only way to preserve client IP addresses
 when putting caddy behind a NLB on AWS.
 
+### Caddyfile
+
+Load the listener before the tls wrapper in the global config section of your Caddyfile
+
+```
+{
+    servers {
+      listener_wrappers {
+        go_proxyproto {
+          timeout 5s
+        }
+        tls
+      }
+    }
+    ...
+}
+```
+
 ### JSON
 
 Load the listener before the tls wrapper
@@ -31,20 +49,20 @@ Load the listener before the tls wrapper
 }
 ```
 
-### Caddyfile
+### Installation
 
-Load the listener before the tls wrapper in the global config section of your Caddyfile
+This is an example Dockerfile to build a caddy 2.4.6 Docker image containing this plugin.
 
 ```
-{
-    servers {
-      listener_wrappers {
-        go_proxyproto {
-          timeout 5s
-        }
-        tls
-      }
-    }
-    ...
-}
+FROM caddy:2.4.6-builder AS builder
+
+RUN xcaddy build \
+    --with github.com/Jelle7/caddy-go-proxyproto
+
+FROM caddy:2.4.6
+
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 ```
+
+This image can now be ran on an EC2 instance/EKS cluster behind an NLB and pass
+client IP addresses correctly in the `X-Forwarded-For` header field.
